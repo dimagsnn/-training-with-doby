@@ -1,0 +1,48 @@
+# Cursor Agent Kuralları — Antrenman Asistanı
+
+## Rol
+
+Bu repo, Strava entegrasyonlu, hedef bazlı, otomatik revize olan bir antrenman
+planlama uygulamasıdır. Mimari ve süreç detayları için `docs/Surec_ve_Mimari_Dokumani.docx`,
+antrenman/koçluk mantığı için `skills/` klasöründeki 4 SKILL.md dosyasına bak.
+
+Plan üretimi, hedef değerlendirmesi veya revizyon mantığıyla ilgili herhangi bir
+kod yazarken önce ilgili SKILL.md dosyasını oku ve kurallarına sadık kal:
+- skills/training-principles/SKILL.md
+- skills/goal-assessment/SKILL.md
+- skills/revision-logic/SKILL.md
+- skills/heat-and-recovery/SKILL.md
+
+## YASAK Komutlar
+
+Aşağıdaki komutlar hiçbir koşulda otomatik çalıştırılmaz. Bunlardan biri
+gerekiyorsa, ne yapılması gerektiğini açıkla ve kullanıcının manuel
+onayını/manuel çalıştırmasını bekle:
+
+- `supabase db reset`
+- `supabase db push --linked`
+- `DROP` (herhangi bir DROP TABLE/DATABASE/SCHEMA sorgusu)
+- `TRUNCATE`
+- `DELETE WHERE TRUE` (veya koşulsuz/geniş kapsamlı DELETE sorguları)
+- `--yes` / `--force` bayrağı içeren herhangi bir komut
+- `git reset --hard`
+- `git push -f` / `git push --force`
+- Vercel CLI ile deploy: `vercel deploy`, `vercel --prod`
+- Secret rotation / API key yenileme işlemleri
+
+## Serbest (Read-Only, Güvenli) Komutlar
+
+Bunlar onay beklemeden çalıştırılabilir:
+
+- `vitest`
+- `tsc` / `tsc --noEmit`
+- `lint` / `eslint`
+- `build` / `npm run build`
+- `git status`, `git log`, `git diff`
+
+## Genel Kural
+
+Bu liste teknik güvenlik gereğinden gelir, PT veya proje onayından değil —
+her zaman geçerlidir ve proje ilerledikçe genişletilebilir ama daraltılamaz.
+Şüpheli bir durumda (listede olmayan ama yıkıcı olabilecek bir komut) varsayılan
+davranış: çalıştırmadan önce sor.
