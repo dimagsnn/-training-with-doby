@@ -31,8 +31,6 @@ Oluşturulan tablolar (hepsinde RLS aktif, `auth.uid() = user_id` politikasıyla
 - `profiles`, `strava_connections`, `goals`, `training_frequency`, `plans`, `activities_cache`, `revisions`
 - **Sonradan eklendi:** `planned_workouts` (günlük planlanan antrenman — tarih, tür, hedef mesafe/süre/nabız aralığı) ve `activities_cache.matched_planned_workout_id` sütunu
 
-**Not:** Supabase arayüzü güncellendi — artık `anon`/`service_role` yerine `publishable`/`secret` adında yeni tip anahtarlar birincil gösteriliyor (aynı işlevi görüyorlar). Project URL artık Settings → API yerine **Integrations → Data API** altında; anahtarlar **Configuration → API Keys** altında. `.env.local`'de eski isimlendirmeyi (`NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) koruduk, sadece içine yeni tip değerleri (`sb_publishable_...`, `sb_secret_...`) yazdık — kod tarafında değişiklik gerekmiyor.
-
 **Eklenme sebebi:** Takvim görünümü isteği — her güne tıklandığında planlanan ile gerçekleşen (Strava/akıllı saat verisi) yan yana, hatta çizgi grafikte planlanan/gerçekleşen iki renkli karşılaştırma gösterilecek. Bu, mimari dokümanına da §3.4 Takvim Görünümü olarak ve yol haritasına Faz 6 olarak eklendi.
 
 ## Şu Ana Kadar Tamamlananlar (Faz 1 — kısmen)
@@ -58,22 +56,11 @@ Oluşturulan tablolar (hepsinde RLS aktif, `auth.uid() = user_id` politikasıyla
 
 ## Bir Sonraki Adımlar (öncelik sırasıyla)
 
-1. ⏭️ **BURADAN DEVAM: Strava API uygulaması oluştur** — strava.com/settings/api adresine git, "Training with DOBY" adıyla bir uygulama oluştur, Authorization Callback Domain'e `localhost` yaz. Client ID ve Client Secret'ı `.env.local`'e ekle (`>>` ile, üzerine yazmadan):
-   ```bash
-   cat >> .env.local << 'EOF'
-   STRAVA_CLIENT_ID=buraya_client_id
-   STRAVA_CLIENT_SECRET=buraya_client_secret
-   EOF
-   ```
-2. Basit bir ilk sayfa yaz: "Strava'ya bağlan" butonu + son aktiviteleri listeleyen görünüm (ilk gerçek test edilebilir özellik)
-3. Ancak bundan sonra Vercel'e bağlan ve gerçek bir deploy test et
-4. Daha sonra: takvim görünümü (Faz 6) — planned_workouts ile activities_cache eşleştirmesi, planlanan/gerçekleşen çizgi grafiği
-
-## `.env.local` Durumu (7 Temmuz 2026 itibarıyla)
-
-- ✅ `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (publishable key), `SUPABASE_SERVICE_ROLE_KEY` (secret key) dolduruldu ve doğrulandı
-- ✅ `.gitignore`'da olduğu için git'e gitmiyor (`git status` ile teyit edildi)
-- ❌ `STRAVA_CLIENT_ID` / `STRAVA_CLIENT_SECRET` henüz eklenmedi — yarın buradan devam
+1. `.env.local`'e Supabase URL/anon key/service role key ekle (Project Settings → API'den alınacak)
+2. Strava API uygulaması oluştur (strava.com/settings/api), client ID/secret al
+3. Basit bir ilk sayfa yaz: "Strava'ya bağlan" butonu + son aktiviteleri listeleyen görünüm (ilk gerçek test edilebilir özellik)
+4. Ancak bundan sonra Vercel'e bağlan ve gerçek bir deploy test et
+5. Daha sonra: takvim görünümü (Faz 6) — planned_workouts ile activities_cache eşleştirmesi, planlanan/gerçekleşen çizgi grafiği
 
 ## Küçük Notlar / Tuzaklar (tekrar yaşamamak için)
 
